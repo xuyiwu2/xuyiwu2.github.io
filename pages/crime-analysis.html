@@ -65,20 +65,12 @@ var chart2 = {
   "width": 650,
   "height": 300,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$limit=2000"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_extract_y(`DATE OCC`) as year,date_extract_m(`DATE OCC`) as month,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=year,month&$order=year,month"
   },
   "transform": [
     {
-      "calculate": "toDate(datum['DATE OCC'])",
-      "as": "date"
-    },
-    {
-      "timeUnit": "yearmonth",
-      "field": "date",
-      "as": "month"
-    },
-    {
-      "filter": "year(datum.date) == 2023 || year(datum.date) == 2024"
+      "calculate": "datum.year + '-' + (datum.month < 10 ? '0' + datum.month : datum.month)",
+      "as": "year_month"
     }
   ],
   "mark": {
@@ -87,19 +79,24 @@ var chart2 = {
   },
   "encoding": {
     "x": {
-      "field": "month",
-      "type": "temporal",
+      "field": "year_month",
+      "type": "ordinal",
       "title": "Month"
     },
     "y": {
-      "aggregate": "count",
+      "field": "count",
       "type": "quantitative",
       "title": "Number of Incidents"
-    }
+    },
+    "tooltip": [
+      {"field": "year_month", "type": "ordinal", "title": "Month"},
+      {"field": "count", "type": "quantitative", "title": "Incidents"}
+    ]
   }
 };
 
 vegaEmbed("#chart2", chart2);
+
 </script>
 
 </body>
