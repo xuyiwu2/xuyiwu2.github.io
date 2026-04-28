@@ -67,6 +67,13 @@ Because these labels depend on how incidents were reported and recorded, they sh
 The distribution of victims shows that both male and female individuals are frequently represented in crime reports, while a portion of records are categorized as unknown. These categories depend on how incidents are recorded and may not fully reflect the true demographic distribution.
 </p>
 
+<h2>How did crime reports change over time?</h2>
+<div id="chart4"></div>
+
+<p>
+This line chart shows monthly reported crime counts from 2023 to 2024. It helps readers see whether crime reports stayed stable or changed over time.
+</p>
+
 <script>
 var chart1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -144,6 +151,53 @@ var chart3 = {
 };
 
 vegaEmbed("#chart3", chart3);
+
+fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_occ,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=date_occ&$order=date_occ")
+  .then(response => response.json())
+  .then(data => {
+    const monthly = {};
+
+    data.forEach(row => {
+      const month = row.date_occ.slice(0, 7);
+      monthly[month] = (monthly[month] || 0) + Number(row.count);
+    });
+
+    const monthlyData = Object.keys(monthly).sort().map(month => ({
+      month: month,
+      count: monthly[month]
+    }));
+
+    var chart4 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 650,
+      "height": 300,
+      "data": {
+        "values": monthlyData
+      },
+      "mark": {
+        "type": "line",
+        "point": true
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "title": "Month"
+        },
+        "y": {
+          "field": "count",
+          "type": "quantitative",
+          "title": "Number of Incidents"
+        },
+        "tooltip": [
+          {"field": "month", "type": "ordinal", "title": "Month"},
+          {"field": "count", "type": "quantitative", "title": "Incidents"}
+        ]
+      }
+    };
+
+    vegaEmbed("#chart4", chart4);
+  });
 </script>
 
 </body>
