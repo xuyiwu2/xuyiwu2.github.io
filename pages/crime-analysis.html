@@ -594,29 +594,112 @@ function buildHeatmapSpec(filteredData) {
   };
 }
 
-function buildAgeAreaSpec() {
+function buildAgeTreemapSpec() {
+  const treemapValues = [{"age_bin": "All Ages", "parent": null, "count": 0}].concat(
+    ageBinData.map(d => ({
+      age_bin: d.age_bin,
+      parent: "All Ages",
+      count: d.count
+    }))
+  );
   return {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
     "width": 460,
-    "height": 280,
-    "data": {"values": ageBinData},
-    "mark": {"type": "area", "line": true, "point": true, "color": "#ddd6fe"},
-    "encoding": {
-      "x": {"field": "age_bin", "type": "ordinal", "sort": ageOrder, "title": "Victim Age Range"},
-      "y": {"field": "count", "type": "quantitative", "title": "Reported Incidents"},
-      "color": {"value": "#7c3aed"},
-      "tooltip": [
-        {"field": "age_bin", "type": "ordinal", "title": "Age Range"},
-        {"field": "count", "type": "quantitative", "title": "Incidents"}
-      ],
-      "opacity": {
-        "condition": {
-          "test": selectedAgeBin ? "datum.age_bin === '" + selectedAgeBin + "'" : "false",
-          "value": 1
-        },
-        "value": 0.75
+    "height": 300,
+    "padding": 6,
+    "autosize": "pad",
+    "data": [
+      {
+        "name": "tree",
+        "values": treemapValues,
+        "transform": [
+          {
+            "type": "stratify",
+            "key": "age_bin",
+            "parentKey": "parent"
+          },
+          {
+            "type": "treemap",
+            "field": "count",
+            "sort": {"field": "value", "order": "descending"},
+            "round": true,
+            "method": "squarify",
+            "size": [{"signal": "width"}, {"signal": "height"}]
+          },
+          {"type": "filter", "expr": "datum.depth == 1"}
+        ]
       }
-    }
+    ],
+    "scales": [
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": ageOrder,
+        "range": ["#e9d5ff", "#ddd6fe", "#c4b5fd", "#a78bfa", "#8b5cf6", "#7c3aed", "#6d28d9"]
+      }
+    ],
+    "marks": [
+      {
+        "type": "rect",
+        "from": {"data": "tree"},
+        "encode": {
+          "enter": {
+            "x": {"field": "x0"},
+            "y": {"field": "y0"},
+            "x2": {"field": "x1"},
+            "y2": {"field": "y1"},
+            "stroke": {"value": "#ffffff"},
+            "strokeWidth": {"value": 2},
+            "cursor": {"value": "pointer"}
+          },
+          "update": {
+            "fill": [
+              {
+                "test": selectedAgeBin ? "datum.age_bin === '" + selectedAgeBin + "'" : "false",
+                "value": "#4c1d95"
+              },
+              {"scale": "color", "field": "age_bin"}
+            ],
+            "fillOpacity": {"value": 0.95}
+          }
+        }
+      },
+      {
+        "type": "text",
+        "from": {"data": "tree"},
+        "encode": {
+          "enter": {
+            "x": {"signal": "(datum.x0 + datum.x1) / 2"},
+            "y": {"signal": "(datum.y0 + datum.y1) / 2 - 8"},
+            "align": {"value": "center"},
+            "baseline": {"value": "middle"},
+            "fill": {"value": "#ffffff"},
+            "fontWeight": {"value": "bold"},
+            "fontSize": {"value": 16}
+          },
+          "update": {
+            "text": {"signal": "datum.age_bin"}
+          }
+        }
+      },
+      {
+        "type": "text",
+        "from": {"data": "tree"},
+        "encode": {
+          "enter": {
+            "x": {"signal": "(datum.x0 + datum.x1) / 2"},
+            "y": {"signal": "(datum.y0 + datum.y1) / 2 + 12"},
+            "align": {"value": "center"},
+            "baseline": {"value": "middle"},
+            "fill": {"value": "#ffffff"},
+            "fontSize": {"value": 13}
+          },
+          "update": {
+            "text": {"signal": "format(datum.count, ',')"}
+          }
+        }
+      }
+    ]
   };
 }
 
@@ -625,7 +708,7 @@ function buildMapSpec(filteredPoints) {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": 460,
     "height": 420,
-    "projection": {"type": "mercator", "center": [-119.5, 36.5], "scale": 2200},
+    "projection": {"type": "mercator", "center": [-118.25, 34.05], "scale": 42000},
     "layer": [
       {
         "data": {
@@ -765,7 +848,7 @@ function renderDashboard1() {
 }
 
 function renderDashboard2() {
-  vegaEmbed("#dashboard2-age", buildAgeAreaSpec(), {"actions": false}).then(result => {
+  vegaEmbed("#dashboard2-age", buildAgeTreemapSpec(), {"actions": false}).then(result => {
     result.view.addEventListener("click", function(event, item) {
       if (!item || !item.datum || !item.datum.age_bin) {
         selectedAgeBin = null;
