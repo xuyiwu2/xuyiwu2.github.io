@@ -161,6 +161,39 @@
       min-height: 380px;
     }
 
+    .la-map-frame {
+      position: relative;
+      height: 420px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #d1d5db;
+    }
+
+    .la-map-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .la-map-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    .la-map-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(239, 68, 68, 0.45);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
     .note {
       margin-top: 14px;
       padding: 12px 14px;
@@ -703,37 +736,63 @@ function buildAgeTreemapSpec() {
   };
 }
 
-function buildMapSpec(filteredPoints) {
-  return {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 460,
-    "height": 420,
-    "projection": {"type": "mercator", "center": [-118.33, 34.03], "scale": 95000},
-    "layer": [
-      {
-        "data": {
-          "url": "https://stilesdata.com/la-geography/lapd_divisions.geojson",
-          "format": {"type": "geojson"}
-        },
-        "mark": {"type": "geoshape", "fill": "#8f8f95", "stroke": "#ffffff", "strokeWidth": 1.4}
-      },
-      {
-        "data": {"values": filteredPoints},
-        "mark": {"type": "circle", "color": "#ef4444", "opacity": 0.32, "size": 32},
-        "encoding": {
-          "longitude": {"field": "lon", "type": "quantitative"},
-          "latitude": {"field": "lat", "type": "quantitative"},
-          "tooltip": [
-            {"field": "age_bin", "type": "nominal", "title": "Age Range"},
-            {"field": "area_name", "type": "nominal", "title": "Area"},
-            {"field": "lat", "type": "quantitative", "title": "Latitude"},
-            {"field": "lon", "type": "quantitative", "title": "Longitude"},
-            {"field": "weap_desc", "type": "nominal", "title": "Weapon Description"}
-          ]
-        }
-      }
-    ]
+function renderDashboard2Map(filteredPoints) {
+  const container = document.getElementById("dashboard2-map");
+  const frameWidth = container.clientWidth || 460;
+  const frameHeight = 420;
+  const imageWidth = 1024;
+  const imageHeight = 684;
+  const imageAspect = imageWidth / imageHeight;
+  const frameAspect = frameWidth / frameHeight;
+
+  let drawWidth = frameWidth;
+  let drawHeight = frameWidth / imageAspect;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  if (drawHeight > frameHeight) {
+    drawHeight = frameHeight;
+    drawWidth = frameHeight * imageAspect;
+    offsetX = (frameWidth - drawWidth) / 2;
+  } else {
+    offsetY = (frameHeight - drawHeight) / 2;
+  }
+
+  const shapeBox = {
+    left: 0.295,
+    right: 0.739,
+    top: 0.041,
+    bottom: 0.947
   };
+
+  const allLons = mapPointData.map(d => d.lon);
+  const allLats = mapPointData.map(d => d.lat);
+  const minLon = Math.min.apply(null, allLons);
+  const maxLon = Math.max.apply(null, allLons);
+  const minLat = Math.min.apply(null, allLats);
+  const maxLat = Math.max.apply(null, allLats);
+
+  const pointsHtml = filteredPoints.map(point => {
+    const normX = (point.lon - minLon) / (maxLon - minLon || 1);
+    const normY = 1 - ((point.lat - minLat) / (maxLat - minLat || 1));
+    const x = offsetX + (shapeBox.left + normX * (shapeBox.right - shapeBox.left)) * drawWidth;
+    const y = offsetY + (shapeBox.top + normY * (shapeBox.bottom - shapeBox.top)) * drawHeight;
+    const tooltip = [
+      "Age Range: " + point.age_bin,
+      "Area: " + point.area_name,
+      "Latitude: " + point.lat,
+      "Longitude: " + point.lon,
+      "Weapon Description: " + point.weap_desc
+    ].join(" | ").replace(/"/g, "&quot;");
+
+    return '<div class="la-map-dot" style="left:' + x.toFixed(2) + 'px;top:' + y.toFixed(2) + 'px;" title="' + tooltip + '"></div>';
+  }).join("");
+
+  container.innerHTML = ''
+    + '<div class="la-map-frame">'
+    + '<img class="la-map-image" src="/Map%20Gallery%20-%20Community%20Plan%20Area%20Maps.png" alt="City of Los Angeles community plan area map">'
+    + '<div class="la-map-overlay">' + pointsHtml + '</div>'
+    + '</div>';
 }
 
 function buildWeaponSpec(filteredData) {
@@ -862,7 +921,7 @@ function renderDashboard2() {
 
   const filteredPoints = selectedAgeBin ? mapPointData.filter(d => d.age_bin === selectedAgeBin) : mapPointData;
   const filteredWeapons = aggregateByField(selectedAgeBin ? weaponAgeData.filter(d => d.age_bin === selectedAgeBin) : weaponAgeData, "weap_desc", "weap_desc");
-  vegaEmbed("#dashboard2-map", buildMapSpec(filteredPoints), {"actions": false});
+  renderDashboard2Map(filteredPoints);
   vegaEmbed("#dashboard2-weapons", buildWeaponSpec(filteredWeapons), {"actions": false});
 }
 
