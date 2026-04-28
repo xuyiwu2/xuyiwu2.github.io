@@ -87,10 +87,15 @@ var chart1 = {
   }
 ],
 "encoding": {
-  ...
+  "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+  "y": {"field": "area_name", "type": "nominal", "sort": "-x", "title": "LAPD Area"},
+  "tooltip": [
+    {"field": "area_name", "type": "nominal", "title": "Area"},
+    {"field": "count", "type": "quantitative", "title": "Incidents"}
+  ],
   "color": {
     "condition": {
-      "param": "highlight",
+      "selection": "highlight",
       "value": "orange"
     },
     "value": "steelblue"
