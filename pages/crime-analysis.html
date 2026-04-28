@@ -65,12 +65,15 @@ var chart2 = {
   "width": 650,
   "height": 300,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_extract_y(`DATE OCC`) as year,date_extract_m(`DATE OCC`) as month,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=year,month&$order=year,month"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$select=DATE%20OCC&$limit=50000"
   },
   "transform": [
     {
-      "calculate": "datum.year + '-' + (datum.month < 10 ? '0' + datum.month : datum.month)",
-      "as": "year_month"
+      "calculate": "toDate(datum['DATE OCC'])",
+      "as": "occ_date"
+    },
+    {
+      "filter": "year(datum.occ_date) == 2023 || year(datum.occ_date) == 2024"
     }
   ],
   "mark": {
@@ -79,18 +82,28 @@ var chart2 = {
   },
   "encoding": {
     "x": {
-      "field": "year_month",
-      "type": "ordinal",
+      "field": "occ_date",
+      "type": "temporal",
+      "timeUnit": "yearmonth",
       "title": "Month"
     },
     "y": {
-      "field": "count",
+      "aggregate": "count",
       "type": "quantitative",
       "title": "Number of Incidents"
     },
     "tooltip": [
-      {"field": "year_month", "type": "ordinal", "title": "Month"},
-      {"field": "count", "type": "quantitative", "title": "Incidents"}
+      {
+        "field": "occ_date",
+        "type": "temporal",
+        "timeUnit": "yearmonth",
+        "title": "Month"
+      },
+      {
+        "aggregate": "count",
+        "type": "quantitative",
+        "title": "Incidents"
+      }
     ]
   }
 };
