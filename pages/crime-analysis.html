@@ -186,12 +186,44 @@
 
     .la-map-dot {
       position: absolute;
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.55);
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+    }
+
+    .la-map-dot:hover {
+      background: rgba(220, 38, 38, 0.9);
+      z-index: 3;
+    }
+
+    .la-map-tooltip {
+      position: absolute;
+      min-width: 210px;
+      max-width: 280px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      border-radius: 12px;
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.18);
+      color: #334155;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 120ms ease;
+      z-index: 5;
+    }
+
+    .la-map-tooltip.is-visible {
+      opacity: 1;
+    }
+
+    .la-map-tooltip strong {
+      color: #0f172a;
     }
 
     .note {
@@ -772,27 +804,76 @@ function renderDashboard2Map(filteredPoints) {
   const minLat = Math.min.apply(null, allLats);
   const maxLat = Math.max.apply(null, allLats);
 
-  const pointsHtml = filteredPoints.map(point => {
+  const pointsHtml = filteredPoints.map((point, index) => {
     const normX = (point.lon - minLon) / (maxLon - minLon || 1);
     const normY = 1 - ((point.lat - minLat) / (maxLat - minLat || 1));
     const x = offsetX + (shapeBox.left + normX * (shapeBox.right - shapeBox.left)) * drawWidth;
     const y = offsetY + (shapeBox.top + normY * (shapeBox.bottom - shapeBox.top)) * drawHeight;
-    const tooltip = [
-      "Age Range: " + point.age_bin,
-      "Area: " + point.area_name,
-      "Latitude: " + point.lat,
-      "Longitude: " + point.lon,
-      "Weapon Description: " + point.weap_desc
-    ].join(" | ").replace(/"/g, "&quot;");
+    const ageBin = String(point.age_bin).replace(/"/g, "&quot;");
+    const areaName = String(point.area_name).replace(/"/g, "&quot;");
+    const lat = String(point.lat).replace(/"/g, "&quot;");
+    const lon = String(point.lon).replace(/"/g, "&quot;");
+    const weapon = String(point.weap_desc).replace(/"/g, "&quot;");
 
-    return '<div class="la-map-dot" style="left:' + x.toFixed(2) + 'px;top:' + y.toFixed(2) + 'px;" title="' + tooltip + '"></div>';
+    return '<div class="la-map-dot" '
+      + 'data-age="' + ageBin + '" '
+      + 'data-area="' + areaName + '" '
+      + 'data-lat="' + lat + '" '
+      + 'data-lon="' + lon + '" '
+      + 'data-weapon="' + weapon + '" '
+      + 'style="left:' + x.toFixed(2) + 'px;top:' + y.toFixed(2) + 'px;"></div>';
   }).join("");
 
   container.innerHTML = ''
     + '<div class="la-map-frame">'
     + '<img class="la-map-image" src="/Map%20Gallery%20-%20Community%20Plan%20Area%20Maps.png" alt="City of Los Angeles community plan area map">'
     + '<div class="la-map-overlay">' + pointsHtml + '</div>'
+    + '<div class="la-map-tooltip" id="la-map-tooltip"></div>'
     + '</div>';
+
+  const frame = container.querySelector(".la-map-frame");
+  const tooltip = container.querySelector("#la-map-tooltip");
+  const dots = container.querySelectorAll(".la-map-dot");
+
+  dots.forEach(dot => {
+    dot.addEventListener("mouseenter", () => {
+      tooltip.innerHTML =
+        '<div><strong>Age Range:</strong> ' + dot.dataset.age + '</div>' +
+        '<div><strong>Area:</strong> ' + dot.dataset.area + '</div>' +
+        '<div><strong>Latitude:</strong> ' + dot.dataset.lat + '</div>' +
+        '<div><strong>Longitude:</strong> ' + dot.dataset.lon + '</div>' +
+        '<div><strong>Weapon Description:</strong> ' + dot.dataset.weapon + '</div>';
+      tooltip.classList.add("is-visible");
+    });
+
+    dot.addEventListener("mousemove", event => {
+      const frameRect = frame.getBoundingClientRect();
+      const tooltipWidth = 240;
+      const tooltipHeight = 132;
+      let left = event.clientX - frameRect.left + 14;
+      let top = event.clientY - frameRect.top - 12;
+
+      if (left + tooltipWidth > frameRect.width - 8) {
+        left = event.clientX - frameRect.left - tooltipWidth - 14;
+      }
+      if (top + tooltipHeight > frameRect.height - 8) {
+        top = frameRect.height - tooltipHeight - 10;
+      }
+      if (top < 8) {
+        top = 8;
+      }
+      if (left < 8) {
+        left = 8;
+      }
+
+      tooltip.style.left = left + "px";
+      tooltip.style.top = top + "px";
+    });
+
+    dot.addEventListener("mouseleave", () => {
+      tooltip.classList.remove("is-visible");
+    });
+  });
 }
 
 function buildWeaponSpec(filteredData) {
