@@ -38,7 +38,7 @@ Data source: Los Angeles Open Data Portal
 var chart1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$select=area_name,count(*)&$where=date_occ between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=area_name&$order=count(*) DESC"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv"
   },
   "mark": "bar",
   "encoding": {
