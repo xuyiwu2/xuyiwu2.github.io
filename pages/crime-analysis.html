@@ -40,6 +40,13 @@ This chart shows the ten most common reported crime types in Los Angeles from 20
 It helps readers see which categories make up the largest share of reported incidents.
 </p>
 
+<h2>Who are the reported victims?</h2>
+<div id="chart3"></div>
+
+<p>
+This chart shows the distribution of reported victims by sex. It provides additional context about who appears in the reported crime records, although these categories depend on how the data was collected and recorded.
+</p>
+
 <script>
 var chart1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -89,6 +96,34 @@ var chart2 = {
 };
 
 vegaEmbed("#chart2", chart2);
+
+var chart3 = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 500,
+  "height": 300,
+  "data": {
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20IS%20NOT%20NULL&$group=vict_sex&$order=count%20DESC"
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "vict_sex",
+      "type": "nominal",
+      "title": "Victim Sex"
+    },
+    "y": {
+      "field": "count",
+      "type": "quantitative",
+      "title": "Number of Incidents"
+    },
+    "tooltip": [
+      {"field": "vict_sex", "type": "nominal", "title": "Victim Sex"},
+      {"field": "count", "type": "quantitative", "title": "Incidents"}
+    ]
+  }
+};
+
+vegaEmbed("#chart3", chart3);
 </script>
 
 </body>
