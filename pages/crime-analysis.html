@@ -32,11 +32,12 @@ However, this may also reflect population differences.
 Data source: Los Angeles Open Data Portal
 </p>
 
-<h2>How did reported crimes change over time?</h2>
+<h2>What types of crimes are most common?</h2>
 <div id="chart2"></div>
 
 <p>
-This line chart shows how crime reports changed month by month from 2023 to 2024.
+This chart shows the ten most common reported crime types in Los Angeles from 2023 to 2024.
+It helps readers see which categories make up the largest share of reported incidents.
 </p>
 
 <script>
@@ -63,53 +64,31 @@ vegaEmbed("#chart1", chart1);
 var chart2 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 650,
-  "height": 300,
+  "height": 420,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$select=DATE%20OCC&$limit=50000"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=`Crm Cd Desc` as crime_type,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=`Crm Cd Desc`&$order=count DESC&$limit=10"
   },
-  "transform": [
-    {
-      "calculate": "toDate(datum['DATE OCC'])",
-      "as": "occ_date"
-    },
-    {
-      "filter": "year(datum.occ_date) == 2023 || year(datum.occ_date) == 2024"
-    }
-  ],
-  "mark": {
-    "type": "line",
-    "point": true
-  },
+  "mark": "bar",
   "encoding": {
     "x": {
-      "field": "occ_date",
-      "type": "temporal",
-      "timeUnit": "yearmonth",
-      "title": "Month"
-    },
-    "y": {
-      "aggregate": "count",
+      "field": "count",
       "type": "quantitative",
       "title": "Number of Incidents"
     },
+    "y": {
+      "field": "crime_type",
+      "type": "nominal",
+      "sort": "-x",
+      "title": "Crime Type"
+    },
     "tooltip": [
-      {
-        "field": "occ_date",
-        "type": "temporal",
-        "timeUnit": "yearmonth",
-        "title": "Month"
-      },
-      {
-        "aggregate": "count",
-        "type": "quantitative",
-        "title": "Incidents"
-      }
+      {"field": "crime_type", "type": "nominal", "title": "Crime Type"},
+      {"field": "count", "type": "quantitative", "title": "Incidents"}
     ]
   }
 };
 
 vegaEmbed("#chart2", chart2);
-
 </script>
 
 </body>
