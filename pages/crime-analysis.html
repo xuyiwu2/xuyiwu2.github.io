@@ -337,13 +337,13 @@
     <div class="chart-grid">
       <div class="chart-card">
         <h3>Contextual View 1: Crime Burden Adjusted by Population</h3>
-        <p>Incidents per 100,000 residents helps compare relative burden instead of only comparing total counts.</p>
+        <p>Incidents per 100,000 residents helps compare relative burden instead of only comparing total counts. This contextual chart remains citywide and does not change with dashboard selections.</p>
         <div class="chart-frame" id="chart5"></div>
       </div>
 
       <div class="chart-card">
         <h3>Contextual View 2: Poverty Rate and Crime Count</h3>
-        <p>This bubble chart places area poverty rate beside reported incidents and uses bubble size to show estimated incidents per 100,000 residents.</p>
+        <p>This bubble chart places area poverty rate beside reported incidents and uses bubble size to show estimated incidents per 100,000 residents. This contextual chart remains citywide and does not change with dashboard selections.</p>
         <div class="chart-frame" id="chart6"></div>
       </div>
     </div>
@@ -708,18 +708,18 @@ function buildMapSpec(filteredPoints) {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": 460,
     "height": 420,
-    "projection": {"type": "mercator", "center": [-118.38, 34.03], "scale": 120000},
+    "projection": {"type": "mercator", "center": [-118.33, 34.03], "scale": 95000},
     "layer": [
       {
         "data": {
-          "url": "https://stilesdata.com/la-geography/la_city_boundary.geojson",
+          "url": "https://stilesdata.com/la-geography/lapd_divisions.geojson",
           "format": {"type": "geojson"}
         },
-        "mark": {"type": "geoshape", "fill": "#e5e7eb", "stroke": "#94a3b8", "strokeWidth": 1.4}
+        "mark": {"type": "geoshape", "fill": "#8f8f95", "stroke": "#ffffff", "strokeWidth": 1.4}
       },
       {
         "data": {"values": filteredPoints},
-        "mark": {"type": "circle", "color": "#ef4444", "opacity": 0.35, "size": 35},
+        "mark": {"type": "circle", "color": "#ef4444", "opacity": 0.32, "size": 32},
         "encoding": {
           "longitude": {"field": "lon", "type": "quantitative"},
           "latitude": {"field": "lat", "type": "quantitative"},
@@ -867,8 +867,7 @@ function renderDashboard2() {
 }
 
 function renderContextCharts() {
-  const filteredAreaRows = filterByArea(areaData);
-  const contextRows = buildContextualRows(filteredAreaRows);
+  const contextRows = buildContextualRows(areaData);
   vegaEmbed("#chart5", buildChart5Spec(contextRows), {"actions": false});
   vegaEmbed("#chart6", buildChart6Spec(contextRows), {"actions": false});
 }
