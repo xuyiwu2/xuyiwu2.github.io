@@ -33,33 +33,25 @@ Data source: Los Angeles Open Data Portal
 </p>
 
 <script>
-
 var chart1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 650,
+  "height": 420,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$limit=1000"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,count(*) as count&$where=date_occ between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=area_name&$order=count DESC"
   },
   "mark": "bar",
   "encoding": {
-    "x": {
-      "aggregate": "count",
-      "title": "Number of Incidents"
-    },
-    "y": {
-      "field": "area",
-      "type": "nominal",
-      "sort": "-x",
-      "title": "Area"
-    },
+    "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+    "y": {"field": "area_name", "type": "nominal", "sort": "-x", "title": "LAPD Area"},
     "tooltip": [
-      {"field": "area", "type": "nominal", "title": "Area"},
-      {"aggregate": "count", "type": "quantitative", "title": "Count"}
+      {"field": "area_name", "type": "nominal", "title": "Area"},
+      {"field": "count", "type": "quantitative", "title": "Incidents"}
     ]
   }
 };
 
 vegaEmbed("#chart1", chart1);
-
 </script>
 
 </body>
