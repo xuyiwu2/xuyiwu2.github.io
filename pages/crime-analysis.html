@@ -76,15 +76,26 @@ var chart1 = {
     "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,count(*) as count&$where=date_occ between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=area_name&$order=count DESC"
   },
   "mark": "bar",
-  "encoding": {
-    "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
-    "y": {"field": "area_name", "type": "nominal", "sort": "-x", "title": "LAPD Area"},
-    "tooltip": [
-      {"field": "area_name", "type": "nominal", "title": "Area"},
-      {"field": "count", "type": "quantitative", "title": "Incidents"}
-    ]
+"params": [
+  {
+    "name": "highlight",
+    "select": {
+      "type": "point",
+      "on": "mouseover",
+      "clear": "mouseout"
+    }
   }
-};
+],
+"encoding": {
+  ...
+  "color": {
+    "condition": {
+      "param": "highlight",
+      "value": "orange"
+    },
+    "value": "steelblue"
+  }
+}
 
 vegaEmbed("#chart1", chart1);
 
