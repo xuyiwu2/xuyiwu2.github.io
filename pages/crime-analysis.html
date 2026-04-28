@@ -66,7 +66,7 @@ var chart2 = {
   "width": 650,
   "height": 420,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=crm_cd_desc,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=crm_cd_desc&$order=count DESC&$limit=10"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=crm_cd_desc,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=crm_cd_desc&$order=count%20DESC&$limit=10"
   },
   "mark": "bar",
   "encoding": {
