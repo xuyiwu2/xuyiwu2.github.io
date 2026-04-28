@@ -66,7 +66,7 @@ var chart2 = {
   "width": 650,
   "height": 420,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=`Crm Cd Desc` as crime_type,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=`Crm Cd Desc`&$order=count DESC&$limit=10"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=crm_cd_desc,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=crm_cd_desc&$order=count DESC&$limit=10"
   },
   "mark": "bar",
   "encoding": {
@@ -76,13 +76,13 @@ var chart2 = {
       "title": "Number of Incidents"
     },
     "y": {
-      "field": "crime_type",
+      "field": "crm_cd_desc",
       "type": "nominal",
       "sort": "-x",
       "title": "Crime Type"
     },
     "tooltip": [
-      {"field": "crime_type", "type": "nominal", "title": "Crime Type"},
+      {"field": "crm_cd_desc", "type": "nominal", "title": "Crime Type"},
       {"field": "count", "type": "quantitative", "title": "Incidents"}
     ]
   }
