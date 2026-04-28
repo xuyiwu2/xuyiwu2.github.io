@@ -32,6 +32,13 @@ However, this may also reflect population differences.
 Data source: Los Angeles Open Data Portal
 </p>
 
+<h2>How did reported crimes change over time?</h2>
+<div id="chart2"></div>
+
+<p>
+This line chart shows how crime reports changed month by month from 2023 to 2024.
+</p>
+
 <script>
 var chart1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -52,6 +59,34 @@ var chart1 = {
 };
 
 vegaEmbed("#chart1", chart1);
+
+var chart2 = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 650,
+  "height": 300,
+  "data": {
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_trunc_ym(`DATE OCC`) as month,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=month&$order=month"
+  },
+  "mark": {
+    "type": "line",
+    "point": true
+  },
+  "encoding": {
+    "x": {
+      "field": "month",
+      "type": "temporal",
+      "title": "Month"
+    },
+    "y": {
+      "field": "count",
+      "type": "quantitative",
+      "title": "Number of Incidents"
+    }
+  }
+};
+
+vegaEmbed("#chart2", chart2);
+
 </script>
 
 </body>
