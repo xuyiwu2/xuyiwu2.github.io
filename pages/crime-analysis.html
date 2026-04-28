@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Crime Patterns in Los Angeles</title>
+
+  <!-- Vega -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 
 <body>
@@ -14,13 +20,47 @@ Crime is a major concern in large cities like Los Angeles.
 This page explores crime patterns using data from 2023 to 2024.
 </p>
 
+<h2>Where do most crimes occur?</h2>
+<div id="chart1"></div>
+
 <p>
-More visualizations will be added below.
+Some areas report significantly higher crime counts than others.
+However, this may also reflect population differences.
 </p>
 
 <p>
 Data source: Los Angeles Open Data Portal
 </p>
+
+<script>
+
+var chart1 = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "IS 445 Final Project data.csv"
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "aggregate": "count",
+      "title": "Number of Incidents"
+    },
+    "y": {
+      "field": "AREA NAME",
+      "type": "nominal",
+      "sort": "-x",
+      "title": "Area"
+    },
+    "tooltip": [
+      {"field": "AREA NAME", "type": "nominal"},
+      {"aggregate": "count", "type": "quantitative"}
+    ]
+  }
+};
+
+vegaEmbed('#chart1', chart1);
+
+</script>
 
 </body>
 </html>
