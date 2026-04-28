@@ -41,12 +41,24 @@ var chart1 = {
   },
   "mark": "bar",
   "encoding": {
-    "x": {"aggregate": "count"},
-    "y": {"field": "area_name", "type": "nominal"},
+    "x": {
+      "aggregate": "count",
+      "title": "Number of Incidents"
+    },
+    "y": {
+      "field": "area",
+      "type": "nominal",
+      "sort": "-x",
+      "title": "Area"
+    },
+    "tooltip": [
+      {"field": "area", "type": "nominal", "title": "Area"},
+      {"aggregate": "count", "type": "quantitative", "title": "Count"}
+    ]
   }
 };
 
-vegaEmbed('#chart1', chart1);
+vegaEmbed("#chart1", chart1);
 
 </script>
 
