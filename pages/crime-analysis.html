@@ -218,7 +218,7 @@
       This project presents a public-facing analysis of reported crime in Los Angeles during 2023-2024. The page is organized into two dashboards, followed by contextual visualizations and a final conclusion section.
     </p>
     <p>
-      The first dashboard is based on our Part 2 work. The second dashboard extends the analysis with victim-age ranges, a California map view, and weapon information. Together these sections satisfy the rubric requirements for interaction, contextual comparison, citations, and written interpretation.
+      The first dashboard is based on our Part 2 work. The second dashboard extends the analysis with victim-age ranges, a City of Los Angeles map view, and weapon information. Together these sections satisfy the rubric requirements for interaction, contextual comparison, citations, and written interpretation.
     </p>
     <div class="hero-meta">
       <div class="meta-pill"><strong>Group Members:</strong> Xuyi Wu, Li-Yi Hsu</div>
@@ -308,7 +308,7 @@
       </div>
 
       <div class="chart-card">
-        <h3>Driven Plot: California Map with Incident Points</h3>
+        <h3>Driven Plot: City of Los Angeles Map with Incident Points</h3>
         <p>This map plots sample incident coordinates for the selected age range and shows latitude, longitude, and weapon description in the tooltip.</p>
         <div class="chart-frame tall" id="dashboard2-map"></div>
       </div>
@@ -708,15 +708,14 @@ function buildMapSpec(filteredPoints) {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": 460,
     "height": 420,
-    "projection": {"type": "mercator", "center": [-118.25, 34.05], "scale": 42000},
+    "projection": {"type": "mercator", "center": [-118.38, 34.03], "scale": 120000},
     "layer": [
       {
         "data": {
-          "url": "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json",
-          "format": {"type": "topojson", "feature": "states"}
+          "url": "https://stilesdata.com/la-geography/la_city_boundary.geojson",
+          "format": {"type": "geojson"}
         },
-        "transform": [{"filter": "datum.id == 6"}],
-        "mark": {"type": "geoshape", "fill": "#e0ecff", "stroke": "#7aa2e3", "strokeWidth": 1.2}
+        "mark": {"type": "geoshape", "fill": "#e5e7eb", "stroke": "#94a3b8", "strokeWidth": 1.4}
       },
       {
         "data": {"values": filteredPoints},
