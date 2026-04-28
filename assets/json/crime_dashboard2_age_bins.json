@@ -1,0 +1,1 @@
+[{"age_bin": "0-17", "bin_order": 0, "count": 8442}, {"age_bin": "18-24", "bin_order": 1, "count": 32805}, {"age_bin": "25-34", "bin_order": 2, "count": 68938}, {"age_bin": "35-44", "bin_order": 3, "count": 54222}, {"age_bin": "45-54", "bin_order": 4, "count": 36750}, {"age_bin": "55-64", "bin_order": 5, "count": 25047}, {"age_bin": "65+", "bin_order": 6, "count": 19340}]

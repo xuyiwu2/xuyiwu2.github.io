@@ -215,10 +215,10 @@
   <section class="hero">
     <h1>Crime Patterns in Los Angeles</h1>
     <p>
-      This project presents a public-facing dashboard about where crimes are concentrated in Los Angeles and how reported patterns change across place, category, victim profile, and time during 2023-2024.
+      This project presents a public-facing analysis of reported crime in Los Angeles during 2023-2024. The page is organized into two dashboards, followed by contextual visualizations and a final conclusion section.
     </p>
     <p>
-      The layout is intentionally simpler than larger multi-dashboard examples, but it still includes the rubric requirements: an interactive feature, contextual visualizations with citations, readable labels, and a final write-up.
+      The first dashboard is based on our Part 2 work. The second dashboard extends the analysis with victim-age ranges, a California map view, and weapon information. Together these sections satisfy the rubric requirements for interaction, contextual comparison, citations, and written interpretation.
     </p>
     <div class="hero-meta">
       <div class="meta-pill"><strong>Group Members:</strong> Xuyi Wu, Li-Yi Hsu</div>
@@ -228,65 +228,109 @@
   </section>
 
   <section>
-    <h2 class="section-title">Project Overview</h2>
+    <h2 class="section-title">Background</h2>
     <p class="section-lead">
-      Start with the area chart below. Clicking one LAPD area updates the rest of the page so readers can compare how crime composition and context change for that selected place.
+      Crime reporting in Los Angeles varies across neighborhoods, time, victim characteristics, and incident circumstances. This project focuses on a 2023-2024 subset of the city crime data and uses linked dashboards to help readers compare where incidents are concentrated and how patterns shift once a category is selected.
     </p>
     <div class="overview-grid">
       <div class="panel soft">
-        <h3>Interactive Dashboard</h3>
-        <p>Click one area in the first chart to filter every other chart on the page. Click again to return to the citywide view.</p>
+        <h3>Data Source</h3>
+        <p>Each row in the dataset represents one reported crime and includes location, time, offense category, victim details, and, in many cases, weapon information.</p>
       </div>
       <div class="panel">
-        <h3>What This Shows</h3>
-        <p>The page compares crime concentration, top offense types, victim distribution, monthly change, and two contextual views tied to population and poverty.</p>
+        <h3>Interaction Design</h3>
+        <p>Dashboard 1 uses area and crime-type selections from our Part 2 notebook. Dashboard 2 uses victim-age ranges to drive the linked map and weapon chart.</p>
       </div>
       <div class="panel">
-        <h3>Why This Matters</h3>
-        <p>Raw totals alone can be misleading. The contextual charts help readers compare absolute volume with relative burden and neighborhood conditions.</p>
+        <h3>Notebook Link</h3>
+        <p>The data preparation and earlier expert-facing analysis are available in our Part 2 notebook, which this page adapts into a more public-facing format.</p>
       </div>
     </div>
   </section>
 
   <section>
-    <h2 class="section-title">Interactive Dashboard</h2>
+    <h2 class="section-title">Dashboard 1</h2>
+    <p class="section-lead">
+      This dashboard is adapted from our Part 2 work. First click an LAPD area in the driver chart, then click a crime type if you want the monthly trend and heatmap to focus on one offense category inside that selected area.
+    </p>
     <div class="chart-grid two-wide">
       <div class="chart-card">
-        <h3>Where Do Most Crimes Occur?</h3>
-        <p>Click a bar to filter all charts to that LAPD area. Click the same bar again to clear the filter.</p>
-        <div class="chart-frame tall" id="chart1"></div>
+        <h3>Main View: Crime Incidents by LAPD Area</h3>
+        <p>This driver plot shows total reported incidents by LAPD area and controls the other charts in Dashboard 1 and the contextual visualizations below.</p>
+        <div class="chart-frame tall" id="dashboard1-driver"></div>
         <div class="note">
-          Areas such as Central, Pacific, and Southwest tend to appear near the top in absolute count, suggesting that crime reporting is concentrated in a limited number of locations.
+          Selecting a high-count area makes it easier to see whether the local crime profile differs from the citywide picture.
         </div>
       </div>
 
       <div class="chart-card">
-        <h3>What Types of Crimes Are Most Common?</h3>
-        <p>This chart updates after area selection so the reader can see whether the offense mix changes across neighborhoods.</p>
-        <div class="chart-frame tall" id="chart2"></div>
+        <h3>Driven Plot: Top Crime Types in Selected Area</h3>
+        <p>This bar chart updates after area selection and also acts as a second filter for the timeline and heatmap.</p>
+        <div class="chart-frame tall" id="dashboard1-crime-types"></div>
         <div class="note">
-          Property-related crimes remain common across the city, but the relative ranking of categories can shift once one area is selected.
+          Theft-related categories and vehicle-related offenses appear frequently, but the top ten ranking changes once one area is selected.
         </div>
       </div>
     </div>
 
     <div class="chart-grid" style="margin-top: 18px;">
       <div class="chart-card">
-        <h3>Who Are the Reported Victims?</h3>
-        <p>This simpler donut chart keeps the dashboard visually varied while still being easy to read.</p>
-        <div class="chart-frame" id="chart3"></div>
+        <h3>Driven Plot: Monthly Crime Trend</h3>
+        <p>This line chart shows how incident counts change over time for the selected area and, when chosen, the selected crime type.</p>
+        <div class="chart-frame wide" id="dashboard1-trend"></div>
       </div>
 
       <div class="chart-card">
-        <h3>How Did Crime Reports Change Over Time?</h3>
-        <p>The monthly timeline shows how reported incidents changed from January 2023 through December 2024.</p>
-        <div class="chart-frame wide" id="chart4"></div>
+        <h3>Driven Plot: Hour by Weekday Heatmap</h3>
+        <p>This heatmap shows when incidents are most likely to occur based on hour of day and day of week.</p>
+        <div class="chart-frame wide" id="dashboard1-heatmap"></div>
+      </div>
+    </div>
+    <div class="writeup">
+      <div class="panel">
+        <p>
+          Dashboard 1 provides an interactive overview of crime patterns in Los Angeles using the linked-view structure we developed in Part 2. The area chart works as the main entry point, the top crime-type chart narrows the focus further, and the monthly trend and heatmap reveal how timing changes once selections are made.
+        </p>
       </div>
     </div>
   </section>
 
   <section>
-    <h2 class="section-title">Contextual Visualizations</h2>
+    <h2 class="section-title">Dashboard 2</h2>
+    <p class="section-lead">
+      This second dashboard uses victim-age ranges as the interactive driver. The linked views show where incidents involving those age groups appear on the map and which weapon descriptions are most common for the selected range.
+    </p>
+    <div class="chart-grid two-wide">
+      <div class="chart-card">
+        <h3>Main View: Victim Age Range Distribution</h3>
+        <p>Click an age range in this area chart to filter the map and weapon bar chart.</p>
+        <div class="chart-frame" id="dashboard2-age"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Driven Plot: California Map with Incident Points</h3>
+        <p>This map plots sample incident coordinates for the selected age range and shows latitude, longitude, and weapon description in the tooltip.</p>
+        <div class="chart-frame tall" id="dashboard2-map"></div>
+      </div>
+    </div>
+    <div class="chart-grid" style="margin-top: 18px;">
+      <div class="chart-card">
+        <h3>Driven Plot: Weapon Descriptions by Age Range</h3>
+        <p>This chart highlights the most common weapon descriptions associated with the selected victim-age range.</p>
+        <div class="chart-frame tall" id="dashboard2-weapons"></div>
+      </div>
+    </div>
+    <div class="writeup">
+      <div class="panel">
+        <p>
+          Dashboard 2 extends the project beyond Part 2 by focusing on victim age. It shows how age groups differ in total involvement, where sampled incidents are located, and what weapon descriptions appear most often in those records. This helps connect demographic patterns to both geography and incident characteristics.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Contextual Visualization</h2>
     <p class="section-lead">
       These two supporting charts provide context beyond raw crime totals, which is one of the key rubric requirements.
     </p>
@@ -313,33 +357,54 @@
   </section>
 
   <section>
-    <h2 class="section-title">Final Write-Up</h2>
+    <h2 class="section-title">Conclusion</h2>
     <div class="writeup">
       <div class="panel">
         <p>
-          This project identifies substantial geographic concentration in reported crime across Los Angeles during 2023-2024. Central, Pacific, and Southwest appear among the largest contributors in absolute counts, while other areas remain consistently lower. The linked interaction shows that crime mix, victim reporting profile, and monthly rhythm can differ by area rather than following one citywide pattern.
+          This project shows that crime in Los Angeles is not evenly distributed across space, category, or victim group. Some LAPD areas account for a noticeably larger share of incidents, and once one area is selected, the local crime composition and timing patterns can look different from the citywide view.
         </p>
       </div>
       <div class="panel">
         <p>
-          The contextual charts strengthen interpretation beyond raw totals. Population-adjusted rates show that high incident counts are not always identical to highest relative burden, and economic context varies meaningfully across areas. Together, these views encourage readers to compare risk and reporting patterns more carefully and avoid over-interpreting one metric in isolation.
+          The second dashboard suggests that victim-age ranges also reveal meaningful differences. By connecting age bins to mapped incident locations and weapon descriptions, the analysis adds another layer to the public-facing story and helps viewers see how crime characteristics can vary across demographic groups.
         </p>
       </div>
       <div class="panel">
         <p>
-          Important limitations remain: these data represent reported incidents, category labels may include recording inconsistencies, and later periods in 2024 may be less complete. Future project extensions could add uncertainty indicators, compare multiple years with consistent completeness windows, and incorporate additional contextual variables such as mobility or built-environment measures. Even with these limits, the combined visuals provide a clear public-facing summary of where incidents are concentrated and how patterns vary across Los Angeles communities.
+          The contextual charts strengthen interpretation beyond raw totals by showing that high counts do not always mean the highest relative burden. Important limitations remain: these data reflect reported incidents, later 2024 reporting may be less complete, and the contextual comparisons use area-level estimates rather than incident-level causes. Even with those limits, the dashboards provide a clearer view of crime patterns for a public audience.
         </p>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Citation</h2>
+    <div class="panel">
+      <p>
+        Main dataset:
+        <a href="https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8" target="_blank">Los Angeles Open Data Portal Crime Data from 2020 to Present</a>.
+      </p>
+      <p style="margin-top: 10px;">
+        Contextual datasets:
+        <a href="https://planning.lacity.gov/plans-policies/community-plan-area-data" target="_blank">Los Angeles City Planning Community Plan Area data</a>,
+        <a href="https://www.census.gov/programs-surveys/acs" target="_blank">U.S. Census American Community Survey</a>.
+      </p>
     </div>
   </section>
 </div>
 
 <script>
 let selectedArea = null;
+let selectedCrimeType = null;
+let selectedAgeBin = null;
+
 let areaData = [];
 let crimeTypeData = [];
-let victimData = [];
-let monthlyData = [];
+let monthlyCrimeTypeData = [];
+let heatmapData = [];
+let ageBinData = [];
+let weaponAgeData = [];
+let mapPointData = [];
 
 const accentColor = "#3b82f6";
 const neutralColor = "#cbd5e1";
@@ -355,11 +420,11 @@ const contextualLookup = {
   "Olympic": {"population": 290000, "poverty_rate": 22.0}
 };
 
+const ageOrder = ["0-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"];
+const weekdayOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function filterByArea(data) {
-  if (!selectedArea) {
-    return data;
-  }
-  return data.filter(d => d.area_name === selectedArea);
+  return selectedArea ? data.filter(d => d.area_name === selectedArea) : data;
 }
 
 function buildContextualRows(filteredAreaRows) {
@@ -383,16 +448,47 @@ function buildContextualRows(filteredAreaRows) {
 function aggregateMonthly(data) {
   const byMonth = {};
   data.forEach(row => {
-    const key = row.month;
-    byMonth[key] = (byMonth[key] || 0) + Number(row.count);
+    byMonth[row.month] = (byMonth[row.month] || 0) + Number(row.count);
   });
   return Object.keys(byMonth).sort().map(month => ({month: month, count: byMonth[month]}));
 }
 
-function buildChart1Spec() {
+function aggregateHeatmap(data) {
+  const byKey = {};
+  data.forEach(row => {
+    const key = row.weekday + "__" + row.hour;
+    if (!byKey[key]) {
+      byKey[key] = {weekday: row.weekday, weekday_order: row.weekday_order, hour: row.hour, count: 0};
+    }
+    byKey[key].count += Number(row.count);
+  });
+  return Object.values(byKey).sort((a, b) => (a.weekday_order - b.weekday_order) || (a.hour - b.hour));
+}
+
+function aggregateByField(data, fieldName, outputFieldName) {
+  const grouped = {};
+  data.forEach(row => {
+    const key = row[fieldName];
+    if (!grouped[key]) {
+      grouped[key] = {[outputFieldName]: key, count: 0};
+    }
+    grouped[key].count += Number(row.count);
+  });
+  return Object.values(grouped).sort((a, b) => b.count - a.count);
+}
+
+function topN(data, fieldName, n) {
+  return data
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .slice(0, n)
+    .map(d => d[fieldName]);
+}
+
+function buildAreaDriverSpec() {
   return {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 700,
+    "width": 430,
     "height": 420,
     "data": {"values": areaData},
     "mark": {"type": "bar", "cornerRadiusEnd": 3},
@@ -414,10 +510,10 @@ function buildChart1Spec() {
   };
 }
 
-function buildChart2Spec(filteredData) {
+function buildCrimeTypeSpec(filteredData) {
   return {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 700,
+    "width": 430,
     "height": 420,
     "data": {"values": filteredData},
     "transform": [
@@ -426,57 +522,39 @@ function buildChart2Spec(filteredData) {
     ],
     "mark": {"type": "bar", "cornerRadiusEnd": 3},
     "encoding": {
-      "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "x": {"field": "count", "type": "quantitative", "title": "Incidents"},
       "y": {
-        "field": "crm_cd_desc",
+        "field": "crime_type",
         "type": "nominal",
         "sort": "-x",
-        "title": selectedArea ? "Crime Type (" + selectedArea + ")" : "Crime Type (All Areas)",
-        "axis": {"labelLimit": 360}
+        "title": selectedArea ? "Crime Type in " + selectedArea : "Crime Type",
+        "axis": {"labelLimit": 280}
       },
-      "color": {"value": "#14b8a6"},
+      "color": {
+        "condition": {
+          "test": selectedCrimeType ? "datum.crime_type === '" + selectedCrimeType.replace(/'/g, "\\'") + "'" : "false",
+          "value": "#14b8a6"
+        },
+        "value": "#c7f9f1"
+      },
       "tooltip": [
-        {"field": "crm_cd_desc", "type": "nominal", "title": "Crime Type"},
+        {"field": "crime_type", "type": "nominal", "title": "Crime Type"},
         {"field": "count", "type": "quantitative", "title": "Incidents"}
       ]
     }
   };
 }
 
-function buildChart3Spec(filteredData) {
+function buildTrendSpec(filteredData) {
   return {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 540,
-    "height": 320,
+    "width": 500,
+    "height": 270,
     "data": {"values": filteredData},
-    "mark": {"type": "arc", "innerRadius": 75, "outerRadius": 140},
+    "mark": {"type": "line", "point": {"filled": true, "size": 40}, "strokeWidth": 3},
     "encoding": {
-      "theta": {"field": "count", "type": "quantitative"},
-      "color": {
-        "field": "vict_sex",
-        "type": "nominal",
-        "title": "Victim Sex",
-        "scale": {"range": ["#7c3aed", "#06b6d4", "#f59e0b"]}
-      },
-      "tooltip": [
-        {"field": "vict_sex", "type": "nominal", "title": "Victim Sex"},
-        {"field": "count", "type": "quantitative", "title": "Incidents"}
-      ]
-    },
-    "view": {"stroke": null}
-  };
-}
-
-function buildChart4Spec(filteredData) {
-  return {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 860,
-    "height": 360,
-    "data": {"values": filteredData},
-    "mark": {"type": "line", "point": {"filled": true, "size": 45}, "strokeWidth": 3},
-    "encoding": {
-      "x": {"field": "month", "type": "ordinal", "title": "Month", "axis": {"labelAngle": -65}},
-      "y": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "x": {"field": "month", "type": "ordinal", "title": "Month", "axis": {"labelAngle": -55}},
+      "y": {"field": "count", "type": "quantitative", "title": "Incidents"},
       "color": {"value": "#2563eb"},
       "tooltip": [
         {"field": "month", "type": "ordinal", "title": "Month"},
@@ -486,10 +564,123 @@ function buildChart4Spec(filteredData) {
   };
 }
 
+function buildHeatmapSpec(filteredData) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 420,
+    "height": 270,
+    "data": {"values": filteredData},
+    "mark": "rect",
+    "encoding": {
+      "x": {"field": "hour", "type": "ordinal", "title": "Hour of Day"},
+      "y": {
+        "field": "weekday",
+        "type": "ordinal",
+        "title": "Weekday",
+        "sort": weekdayOrder
+      },
+      "color": {
+        "field": "count",
+        "type": "quantitative",
+        "title": "Incidents",
+        "scale": {"scheme": "blues"}
+      },
+      "tooltip": [
+        {"field": "weekday", "type": "ordinal", "title": "Weekday"},
+        {"field": "hour", "type": "ordinal", "title": "Hour"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
+function buildAgeAreaSpec() {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 460,
+    "height": 280,
+    "data": {"values": ageBinData},
+    "mark": {"type": "area", "line": true, "point": true, "color": "#ddd6fe"},
+    "encoding": {
+      "x": {"field": "age_bin", "type": "ordinal", "sort": ageOrder, "title": "Victim Age Range"},
+      "y": {"field": "count", "type": "quantitative", "title": "Reported Incidents"},
+      "color": {"value": "#7c3aed"},
+      "tooltip": [
+        {"field": "age_bin", "type": "ordinal", "title": "Age Range"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ],
+      "opacity": {
+        "condition": {
+          "test": selectedAgeBin ? "datum.age_bin === '" + selectedAgeBin + "'" : "false",
+          "value": 1
+        },
+        "value": 0.75
+      }
+    }
+  };
+}
+
+function buildMapSpec(filteredPoints) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 460,
+    "height": 420,
+    "projection": {"type": "mercator", "center": [-119.5, 36.5], "scale": 2200},
+    "layer": [
+      {
+        "data": {
+          "url": "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json",
+          "format": {"type": "topojson", "feature": "states"}
+        },
+        "transform": [{"filter": "datum.id == 6"}],
+        "mark": {"type": "geoshape", "fill": "#e0ecff", "stroke": "#7aa2e3", "strokeWidth": 1.2}
+      },
+      {
+        "data": {"values": filteredPoints},
+        "mark": {"type": "circle", "color": "#ef4444", "opacity": 0.35, "size": 35},
+        "encoding": {
+          "longitude": {"field": "lon", "type": "quantitative"},
+          "latitude": {"field": "lat", "type": "quantitative"},
+          "tooltip": [
+            {"field": "age_bin", "type": "nominal", "title": "Age Range"},
+            {"field": "area_name", "type": "nominal", "title": "Area"},
+            {"field": "lat", "type": "quantitative", "title": "Latitude"},
+            {"field": "lon", "type": "quantitative", "title": "Longitude"},
+            {"field": "weap_desc", "type": "nominal", "title": "Weapon Description"}
+          ]
+        }
+      }
+    ]
+  };
+}
+
+function buildWeaponSpec(filteredData) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 920,
+    "height": 340,
+    "data": {"values": filteredData},
+    "transform": [
+      {"window": [{"op": "rank", "as": "rank"}], "sort": [{"field": "count", "order": "descending"}]},
+      {"filter": "datum.rank <= 10"}
+    ],
+    "mark": {"type": "bar", "cornerRadiusEnd": 3},
+    "encoding": {
+      "x": {"field": "count", "type": "quantitative", "title": "Incidents"},
+      "y": {"field": "weap_desc", "type": "nominal", "sort": "-x", "title": "Weapon Description", "axis": {"labelLimit": 360}},
+      "color": {"value": "#f97316"},
+      "tooltip": [
+        {"field": "weap_desc", "type": "nominal", "title": "Weapon Description"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
 function buildChart5Spec(contextRows) {
   return {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 700,
+    "width": 450,
     "height": 320,
     "data": {"values": contextRows},
     "mark": {"type": "bar", "cornerRadiusEnd": 3},
@@ -510,7 +701,7 @@ function buildChart5Spec(contextRows) {
 function buildChart6Spec(contextRows) {
   return {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 700,
+    "width": 450,
     "height": 320,
     "data": {"values": contextRows},
     "mark": {"type": "circle", "opacity": 0.8, "stroke": "#0f172a", "strokeWidth": 0.5},
@@ -529,47 +720,99 @@ function buildChart6Spec(contextRows) {
   };
 }
 
-function renderAllCharts() {
-  vegaEmbed("#chart1", buildChart1Spec(), {"actions": false}).then(result => {
+function renderDashboard1() {
+  vegaEmbed("#dashboard1-driver", buildAreaDriverSpec(), {"actions": false}).then(result => {
     result.view.addEventListener("click", function(event, item) {
       if (!item || !item.datum || !item.datum.area_name) {
         selectedArea = null;
+        selectedCrimeType = null;
       } else if (selectedArea === item.datum.area_name) {
         selectedArea = null;
+        selectedCrimeType = null;
       } else {
         selectedArea = item.datum.area_name;
+        selectedCrimeType = null;
       }
       renderAllCharts();
     });
   });
 
-  const filteredCrimeTypes = filterByArea(crimeTypeData);
-  const filteredVictims = filterByArea(victimData);
-  const filteredMonths = aggregateMonthly(filterByArea(monthlyData));
+  const filteredCrimeTypes = aggregateByField(filterByArea(crimeTypeData), "crime_type", "crime_type");
+  vegaEmbed("#dashboard1-crime-types", buildCrimeTypeSpec(filteredCrimeTypes), {"actions": false}).then(result => {
+    result.view.addEventListener("click", function(event, item) {
+      if (!item || !item.datum || !item.datum.crime_type) {
+        selectedCrimeType = null;
+      } else if (selectedCrimeType === item.datum.crime_type) {
+        selectedCrimeType = null;
+      } else {
+        selectedCrimeType = item.datum.crime_type;
+      }
+      renderAllCharts();
+    });
+  });
+
+  let filteredMonthly = filterByArea(monthlyCrimeTypeData);
+  let filteredHeatmap = filterByArea(heatmapData);
+  if (selectedCrimeType) {
+    filteredMonthly = filteredMonthly.filter(d => d.crime_type === selectedCrimeType);
+    filteredHeatmap = filteredHeatmap.filter(d => d.crime_type === selectedCrimeType);
+  }
+
+  const monthlyRows = aggregateMonthly(filteredMonthly);
+  const heatmapRows = aggregateHeatmap(filteredHeatmap);
+  vegaEmbed("#dashboard1-trend", buildTrendSpec(monthlyRows), {"actions": false});
+  vegaEmbed("#dashboard1-heatmap", buildHeatmapSpec(heatmapRows), {"actions": false});
+}
+
+function renderDashboard2() {
+  vegaEmbed("#dashboard2-age", buildAgeAreaSpec(), {"actions": false}).then(result => {
+    result.view.addEventListener("click", function(event, item) {
+      if (!item || !item.datum || !item.datum.age_bin) {
+        selectedAgeBin = null;
+      } else if (selectedAgeBin === item.datum.age_bin) {
+        selectedAgeBin = null;
+      } else {
+        selectedAgeBin = item.datum.age_bin;
+      }
+      renderAllCharts();
+    });
+  });
+
+  const filteredPoints = selectedAgeBin ? mapPointData.filter(d => d.age_bin === selectedAgeBin) : mapPointData;
+  const filteredWeapons = aggregateByField(selectedAgeBin ? weaponAgeData.filter(d => d.age_bin === selectedAgeBin) : weaponAgeData, "weap_desc", "weap_desc");
+  vegaEmbed("#dashboard2-map", buildMapSpec(filteredPoints), {"actions": false});
+  vegaEmbed("#dashboard2-weapons", buildWeaponSpec(filteredWeapons), {"actions": false});
+}
+
+function renderContextCharts() {
   const filteredAreaRows = filterByArea(areaData);
   const contextRows = buildContextualRows(filteredAreaRows);
-
-  vegaEmbed("#chart2", buildChart2Spec(filteredCrimeTypes), {"actions": false});
-  vegaEmbed("#chart3", buildChart3Spec(filteredVictims), {"actions": false});
-  vegaEmbed("#chart4", buildChart4Spec(filteredMonths), {"actions": false});
   vegaEmbed("#chart5", buildChart5Spec(contextRows), {"actions": false});
   vegaEmbed("#chart6", buildChart6Spec(contextRows), {"actions": false});
 }
 
+function renderAllCharts() {
+  renderDashboard1();
+  renderDashboard2();
+  renderContextCharts();
+}
+
 Promise.all([
-  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name&$order=count%20DESC&$limit=1000").then(response => response.json()),
-  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,crm_cd_desc,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name,crm_cd_desc&$order=count%20DESC&$limit=5000").then(response => response.json()),
-  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20in(%27F%27,%27M%27,%27X%27)&$group=area_name,vict_sex&$order=count%20DESC&$limit=1000").then(response => response.json()),
-  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,date_extract_y(date_occ)%20as%20year,date_extract_m(date_occ)%20as%20month_num,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name,year,month_num&$order=year,month_num&$limit=2000").then(response => response.json())
+  fetch("/assets/json/crime_dashboard1_area.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard1_crime_types.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard1_monthly_crime_types.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard1_heatmap.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard2_age_bins.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard2_weapon_age.json").then(response => response.json()),
+  fetch("/assets/json/crime_dashboard2_map_points.json").then(response => response.json())
 ]).then(allData => {
   areaData = allData[0].map(d => ({area_name: d.area_name, count: Number(d.count)}));
-  crimeTypeData = allData[1].map(d => ({area_name: d.area_name, crm_cd_desc: d.crm_cd_desc, count: Number(d.count)}));
-  victimData = allData[2].map(d => ({area_name: d.area_name, vict_sex: d.vict_sex, count: Number(d.count)}));
-  monthlyData = allData[3].map(d => ({
-    area_name: d.area_name,
-    month: String(d.year) + "-" + String(d.month_num).padStart(2, "0"),
-    count: Number(d.count)
-  }));
+  crimeTypeData = allData[1].map(d => ({area_name: d.area_name, crime_type: d.crime_type, count: Number(d.count)}));
+  monthlyCrimeTypeData = allData[2].map(d => ({area_name: d.area_name, crime_type: d.crime_type, month: d.month, count: Number(d.count)}));
+  heatmapData = allData[3].map(d => ({area_name: d.area_name, crime_type: d.crime_type, weekday: d.weekday, weekday_order: Number(d.weekday_order), hour: Number(d.hour), count: Number(d.count)}));
+  ageBinData = allData[4].map(d => ({age_bin: d.age_bin, count: Number(d.count)}));
+  weaponAgeData = allData[5].map(d => ({age_bin: d.age_bin, weap_desc: d.weap_desc, count: Number(d.count)}));
+  mapPointData = allData[6].map(d => ({age_bin: d.age_bin, vict_age: Number(d.vict_age), lat: Number(d.lat), lon: Number(d.lon), weap_desc: d.weap_desc, area_name: d.area_name, crime_type: d.crime_type}));
   renderAllCharts();
 });
 </script>
