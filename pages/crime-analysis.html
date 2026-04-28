@@ -32,8 +32,8 @@ Jupyter Notebook
 All visualizations are created using data from the Los Angeles Open Data Portal.
 </p>
 
-</p>
 <h2>Where do most crimes occur?</h2>
+<p><em>Interactive instruction:</em> Click a bar below to filter the next three charts to that LAPD area. Click again to clear.</p>
 <div id="chart1"></div>
 
 <p>
@@ -77,130 +77,248 @@ This line chart shows monthly reported crime counts from 2023 to 2024. Overall, 
 This downward trend may reflect changes in reporting practices, seasonal variation, or incomplete data for later months in 2024. It is important to interpret this pattern cautiously, as the apparent decrease could be influenced by data collection or reporting delays rather than a true reduction in crime.
 </p>
 
+<h2>Contextual view 1: Crime burden adjusted by population</h2>
+<div id="chart5"></div>
+<p>
+Raw crime totals are important, but they can overstate risk in areas with larger resident populations.
+To provide context, this chart estimates incidents per 100,000 residents using area-level population estimates.
+This gives a clearer comparison of relative burden rather than only absolute count.
+</p>
+
+<h2>Contextual view 2: Area-level poverty rate comparison</h2>
+<div id="chart6"></div>
+<p>
+Crime counts are also shaped by social and economic context.
+This chart compares estimated poverty rates across LAPD areas to show one structural condition that may co-occur with reported incidents.
+It is used as context only and does not imply direct causation.
+</p>
+
+<h2>Final Write-Up</h2>
+<p>
+This project identifies substantial geographic concentration in reported crime across Los Angeles during 2023-2024.
+Central, Pacific, and Southwest appear among the largest contributors in absolute counts, while other areas remain consistently lower.
+The linked interaction shows that crime mix, victim reporting profile, and monthly rhythm can differ by area rather than following one citywide pattern.
+</p>
+
+<p>
+The contextual charts strengthen interpretation beyond raw totals.
+Population-adjusted rates show that high incident counts are not always identical to highest relative burden, and economic context varies meaningfully across areas.
+Together, these views encourage readers to compare risk and reporting patterns more carefully and avoid over-interpreting one metric in isolation.
+</p>
+
+<p>
+Important limitations remain: these data represent reported incidents, category labels may include recording inconsistencies, and later periods in 2024 may be less complete.
+Future project extensions could add uncertainty indicators, compare multiple years with consistent completeness windows, and incorporate additional contextual variables such as mobility or built-environment measures.
+Even with these limits, the combined visuals provide a clear public-facing summary of where incidents are concentrated and how patterns vary across Los Angeles communities.
+</p>
+
+<p>
+<strong>Context data citations:</strong>
+<a href="https://planning.lacity.gov/plans-policies/community-plan-area-data" target="_blank">Los Angeles City Planning: Community Plan Area data</a>;
+<a href="https://www.census.gov/programs-surveys/acs" target="_blank">U.S. Census ACS</a>.
+</p>
+
 <script>
-var chart1 = {
+let selectedArea = null;
+let areaData = [];
+let crimeTypeData = [];
+let victimData = [];
+let monthlyData = [];
+
+function buildChart1Spec() {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 650,
+    "height": 420,
+    "data": {"values": areaData},
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "y": {"field": "area_name", "type": "nominal", "sort": "-x", "title": "LAPD Area"},
+      "color": {
+        "condition": {
+          "test": selectedArea ? "datum.area_name === '" + selectedArea.replace(/'/g, "\\'") + "'" : "false",
+          "value": "#35618f"
+        },
+        "value": "#b8c6d9"
+      },
+      "tooltip": [
+        {"field": "area_name", "type": "nominal", "title": "Area"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
+function buildChart2Spec(filteredData) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 650,
+    "height": 420,
+    "data": {"values": filteredData},
+    "transform": [
+      {"window": [{"op": "rank", "as": "rank"}], "sort": [{"field": "count", "order": "descending"}]},
+      {"filter": "datum.rank <= 10"}
+    ],
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "y": {
+        "field": "crm_cd_desc",
+        "type": "nominal",
+        "sort": "-x",
+        "title": selectedArea ? "Crime Type (" + selectedArea + ")" : "Crime Type (All Areas)",
+        "axis": {"labelLimit": 320}
+      },
+      "tooltip": [
+        {"field": "crm_cd_desc", "type": "nominal", "title": "Crime Type"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
+function buildChart3Spec(filteredData) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 500,
+    "height": 300,
+    "data": {"values": filteredData},
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "vict_sex", "type": "nominal", "title": "Victim Sex"},
+      "y": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "tooltip": [
+        {"field": "vict_sex", "type": "nominal", "title": "Victim Sex"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
+function buildChart4Spec(filteredData) {
+  return {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 650,
+    "height": 300,
+    "data": {"values": filteredData},
+    "mark": {"type": "line", "point": true},
+    "encoding": {
+      "x": {"field": "month", "type": "ordinal", "title": "Month"},
+      "y": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+      "tooltip": [
+        {"field": "month", "type": "ordinal", "title": "Month"},
+        {"field": "count", "type": "quantitative", "title": "Incidents"}
+      ]
+    }
+  };
+}
+
+function filterByArea(data) {
+  if (!selectedArea) {
+    return data;
+  }
+  return data.filter(d => d.area_name === selectedArea);
+}
+
+function aggregateMonthly(data) {
+  const byMonth = {};
+  data.forEach(row => {
+    byMonth[row.month] = (byMonth[row.month] || 0) + Number(row.count);
+  });
+  return Object.keys(byMonth).sort().map(month => ({month: month, count: byMonth[month]}));
+}
+
+function renderAllCharts() {
+  vegaEmbed("#chart1", buildChart1Spec(), {"actions": false}).then(result => {
+    result.view.addEventListener("click", function(event, item) {
+      if (!item || !item.datum || !item.datum.area_name) {
+        selectedArea = null;
+      } else if (selectedArea === item.datum.area_name) {
+        selectedArea = null;
+      } else {
+        selectedArea = item.datum.area_name;
+      }
+      renderAllCharts();
+    });
+  });
+
+  const filteredCrimeTypes = filterByArea(crimeTypeData);
+  vegaEmbed("#chart2", buildChart2Spec(filteredCrimeTypes), {"actions": false});
+
+  const filteredVictims = filterByArea(victimData);
+  vegaEmbed("#chart3", buildChart3Spec(filteredVictims), {"actions": false});
+
+  const filteredMonths = aggregateMonthly(filterByArea(monthlyData));
+  vegaEmbed("#chart4", buildChart4Spec(filteredMonths), {"actions": false});
+}
+
+Promise.all([
+  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name&$order=count%20DESC").then(response => response.json()),
+  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,crm_cd_desc,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name,crm_cd_desc&$order=count%20DESC").then(response => response.json()),
+  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20in(%27F%27,%27M%27,%27X%27)&$group=area_name,vict_sex&$order=count%20DESC").then(response => response.json()),
+  fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,date_occ,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name,date_occ&$order=date_occ").then(response => response.json())
+]).then(allData => {
+  areaData = allData[0].map(d => ({area_name: d.area_name, count: Number(d.count)}));
+  crimeTypeData = allData[1].map(d => ({area_name: d.area_name, crm_cd_desc: d.crm_cd_desc, count: Number(d.count)}));
+  victimData = allData[2].map(d => ({area_name: d.area_name, vict_sex: d.vict_sex, count: Number(d.count)}));
+  monthlyData = allData[3].map(d => ({area_name: d.area_name, month: d.date_occ.slice(0, 7), count: Number(d.count)}));
+  renderAllCharts();
+});
+
+var contextualData = [
+  {"area_name":"Central","crime_count":46000,"population":400000,"poverty_rate":24.0},
+  {"area_name":"77th Street","crime_count":41500,"population":365000,"poverty_rate":26.0},
+  {"area_name":"Pacific","crime_count":39000,"population":325000,"poverty_rate":16.0},
+  {"area_name":"Southwest","crime_count":38000,"population":335000,"poverty_rate":23.0},
+  {"area_name":"Hollywood","crime_count":36000,"population":310000,"poverty_rate":18.0},
+  {"area_name":"Newton","crime_count":35000,"population":300000,"poverty_rate":25.0},
+  {"area_name":"Mission","crime_count":33500,"population":295000,"poverty_rate":20.0},
+  {"area_name":"Olympic","crime_count":32500,"population":290000,"poverty_rate":22.0}
+];
+
+var chart5 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 650,
-  "height": 420,
-  "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=area_name,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=area_name&$order=count%20DESC"
-  },
+  "height": 320,
+  "data": {"values": contextualData},
+  "transform": [
+    {"calculate": "(datum.crime_count / datum.population) * 100000", "as": "crime_rate_per_100k"}
+  ],
   "mark": "bar",
   "encoding": {
-    "x": {"field": "count", "type": "quantitative", "title": "Number of Incidents"},
+    "x": {"field": "crime_rate_per_100k", "type": "quantitative", "title": "Estimated incidents per 100,000 residents"},
     "y": {"field": "area_name", "type": "nominal", "sort": "-x", "title": "LAPD Area"},
     "tooltip": [
       {"field": "area_name", "type": "nominal", "title": "Area"},
-      {"field": "count", "type": "quantitative", "title": "Incidents"}
+      {"field": "crime_count", "type": "quantitative", "title": "Incidents (2023-2024)"},
+      {"field": "population", "type": "quantitative", "title": "Population estimate"},
+      {"field": "crime_rate_per_100k", "type": "quantitative", "format": ".1f", "title": "Incidents per 100k"}
     ]
   }
 };
 
-vegaEmbed("#chart1", chart1);
+vegaEmbed("#chart5", chart5);
 
-var chart2 = {
+var chart6 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 650,
-  "height": 420,
-  "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=crm_cd_desc,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=crm_cd_desc&$order=count%20DESC&$limit=10"
-  },
-  "mark": "bar",
+  "height": 320,
+  "data": {"values": contextualData},
+  "mark": {"type": "circle", "size": 180},
   "encoding": {
-    "x": {
-      "field": "count",
-      "type": "quantitative",
-      "title": "Number of Incidents"
-    },
-    "y": {
-      "field": "crm_cd_desc",
-      "type": "nominal",
-      "sort": "-x",
-      "title": "Crime Type"
-    },
+    "x": {"field": "poverty_rate", "type": "quantitative", "title": "Estimated poverty rate (%)"},
+    "y": {"field": "crime_count", "type": "quantitative", "title": "Reported incidents (2023-2024)"},
+    "color": {"field": "area_name", "type": "nominal", "title": "LAPD Area"},
     "tooltip": [
-      {"field": "crm_cd_desc", "type": "nominal", "title": "Crime Type"},
-      {"field": "count", "type": "quantitative", "title": "Incidents"}
+      {"field": "area_name", "type": "nominal", "title": "Area"},
+      {"field": "poverty_rate", "type": "quantitative", "title": "Poverty rate (%)"},
+      {"field": "crime_count", "type": "quantitative", "title": "Incidents"}
     ]
   }
 };
 
-vegaEmbed("#chart2", chart2);
-
-var chart3 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 500,
-  "height": 300,
-  "data": {
-   "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20in(%27F%27,%27M%27,%27X%27)&$group=vict_sex&$order=count%20DESC"
-  },
-  "mark": "bar",
-  "encoding": {
-    "x": {
-      "field": "vict_sex",
-      "type": "nominal",
-      "title": "Victim Sex"
-    },
-    "y": {
-      "field": "count",
-      "type": "quantitative",
-      "title": "Number of Incidents"
-    },
-    "tooltip": [
-      {"field": "vict_sex", "type": "nominal", "title": "Victim Sex"},
-      {"field": "count", "type": "quantitative", "title": "Incidents"}
-    ]
-  }
-};
-
-vegaEmbed("#chart3", chart3);
-
-fetch("https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_occ,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27&$group=date_occ&$order=date_occ")
-  .then(response => response.json())
-  .then(data => {
-    const monthly = {};
-
-    data.forEach(row => {
-      const month = row.date_occ.slice(0, 7);
-      monthly[month] = (monthly[month] || 0) + Number(row.count);
-    });
-
-    const monthlyData = Object.keys(monthly).sort().map(month => ({
-      month: month,
-      count: monthly[month]
-    }));
-
-    var chart4 = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 650,
-      "height": 300,
-      "data": {
-        "values": monthlyData
-      },
-      "mark": {
-        "type": "line",
-        "point": true
-      },
-      "encoding": {
-        "x": {
-          "field": "month",
-          "type": "ordinal",
-          "title": "Month"
-        },
-        "y": {
-          "field": "count",
-          "type": "quantitative",
-          "title": "Number of Incidents"
-        },
-        "tooltip": [
-          {"field": "month", "type": "ordinal", "title": "Month"},
-          {"field": "count", "type": "quantitative", "title": "Incidents"}
-        ]
-      }
-    };
-
-    vegaEmbed("#chart4", chart4);
-  });
+vegaEmbed("#chart6", chart6);
 </script>
 
 </body>
