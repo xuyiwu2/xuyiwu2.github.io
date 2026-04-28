@@ -65,8 +65,22 @@ var chart2 = {
   "width": 650,
   "height": 300,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=date_trunc_ym(`DATE OCC`) as month,count(*) as count&$where=`DATE OCC` between '2023-01-01T00:00:00' and '2024-12-31T23:59:59'&$group=month&$order=month"
+    "url": "https://data.lacity.org/resource/2nrs-mtv8.csv?$limit=5000"
   },
+  "transform": [
+    {
+      "calculate": "toDate(datum['DATE OCC'])",
+      "as": "date"
+    },
+    {
+      "timeUnit": "yearmonth",
+      "field": "date",
+      "as": "month"
+    },
+    {
+      "filter": "year(datum.date) == 2023 || year(datum.date) == 2024"
+    }
+  ],
   "mark": {
     "type": "line",
     "point": true
@@ -78,7 +92,7 @@ var chart2 = {
       "title": "Month"
     },
     "y": {
-      "field": "count",
+      "aggregate": "count",
       "type": "quantitative",
       "title": "Number of Incidents"
     }
@@ -86,7 +100,6 @@ var chart2 = {
 };
 
 vegaEmbed("#chart2", chart2);
-
 </script>
 
 </body>
