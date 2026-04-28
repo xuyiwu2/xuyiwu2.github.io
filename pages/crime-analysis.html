@@ -44,7 +44,9 @@ It helps readers see which categories make up the largest share of reported inci
 <div id="chart3"></div>
 
 <p>
-This chart shows the distribution of reported victims by sex. It provides additional context about who appears in the reported crime records, although these categories depend on how the data was collected and recorded.
+This chart shows the distribution of reported victims by recorded sex category.
+The dataset uses F, M, and X categories, where X generally represents unknown or non-specified records.
+Because these labels depend on how incidents were reported and recorded, they should be interpreted carefully.
 </p>
 
 <script>
@@ -102,7 +104,7 @@ var chart3 = {
   "width": 500,
   "height": 300,
   "data": {
-    "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20IS%20NOT%20NULL&$group=vict_sex&$order=count%20DESC"
+   "url": "https://data.lacity.org/resource/2nrs-mtv8.json?$select=vict_sex,count(*)%20as%20count&$where=date_occ%20between%20%272023-01-01T00:00:00%27%20and%20%272024-12-31T23:59:59%27%20AND%20vict_sex%20in(%27F%27,%27M%27,%27X%27)&$group=vict_sex&$order=count%20DESC"
   },
   "mark": "bar",
   "encoding": {
