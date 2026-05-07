@@ -311,6 +311,34 @@
         <p>The data preparation and earlier expert-facing analysis are available in our Part 2 notebook, which this page adapts into a more public-facing format.</p>
       </div>
     </div>
+
+    <div class="overview-grid">
+      <div class="panel">
+        <h3>Guiding Questions (Our Storyline)</h3>
+        <p>
+          We use the dashboards to answer a small set of questions:
+          (1) Where are incidents most concentrated?
+          (2) Does the mix of crime types change by area?
+          (3) Do reports increase or decrease from 2023 to 2024?
+          (4) How do victim-age groups and weapon descriptions vary across incidents?
+        </p>
+      </div>
+      <div class="panel soft">
+        <h3>How to Read the Dashboards</h3>
+        <p>
+          Start in Dashboard 1 by selecting an LAPD area to see the local crime-type profile, then optionally select a crime type to focus the timeline and heatmap.
+          Dashboard 2 starts from victim-age ranges and links to the Los Angeles map + weapon descriptions.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Key Metrics (Auto-calculated)</h3>
+        <p>
+          Total incidents (2023-2024): <strong id="kpi-total">—</strong><br>
+          Top area by incidents: <strong id="kpi-top-area">—</strong><br>
+          2023 → 2024 change: <strong id="kpi-yoy">—</strong>
+        </p>
+      </div>
+    </div>
   </section>
 
   <section>
@@ -424,6 +452,16 @@
   <section>
     <h2 class="section-title">Conclusion</h2>
     <div class="writeup">
+      <div class="panel">
+        <p>
+          <strong>Key findings (from the dashboards):</strong><br>
+          - Highest-incidence area: <strong id="finding-top-area">—</strong><br>
+          - Most common crime type overall: <strong id="finding-top-crime">—</strong><br>
+          - Year-over-year change (2023 to 2024): <strong id="finding-yoy">—</strong><br>
+          - Largest victim-age range (by count): <strong id="finding-top-age">—</strong><br>
+          - Peak time pattern (weekday + hour): <strong id="finding-peak-time">—</strong>
+        </p>
+      </div>
       <div class="panel">
         <p>
           This project shows that crime in Los Angeles is not evenly distributed across space, category, or victim group. Some LAPD areas account for a noticeably larger share of incidents, and once one area is selected, the local crime composition and timing patterns can look different from the citywide view.
@@ -540,6 +578,71 @@ function aggregateByField(data, fieldName, outputFieldName) {
     grouped[key].count += Number(row.count);
   });
   return Object.values(grouped).sort((a, b) => b.count - a.count);
+}
+
+function formatNumber(n) {
+  try {
+    return Number(n).toLocaleString();
+  } catch {
+    return String(n);
+  }
+}
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function computeAndRenderStoryStats() {
+  // Totals + top area
+  const total = areaData.reduce((sum, d) => sum + Number(d.count || 0), 0);
+  const topArea = areaData.slice().sort((a, b) => b.count - a.count)[0]?.area_name || "—";
+
+  // Top crime type overall
+  const topCrime = aggregateByField(crimeTypeData, "crime_type", "crime_type")[0]?.crime_type || "—";
+
+  // Year-over-year totals (sum across all areas and types)
+  let total2023 = 0;
+  let total2024 = 0;
+  monthlyCrimeTypeData.forEach(d => {
+    const m = String(d.month || "");
+    const year = m.slice(0, 4);
+    if (year === "2023") total2023 += Number(d.count || 0);
+    if (year === "2024") total2024 += Number(d.count || 0);
+  });
+  const yoyPct = total2023 > 0 ? ((total2024 - total2023) / total2023) * 100 : null;
+  const yoyText =
+    yoyPct === null
+      ? "—"
+      : `${yoyPct >= 0 ? "+" : ""}${yoyPct.toFixed(1)}% (${formatNumber(total2023)} → ${formatNumber(total2024)})`;
+
+  // Top age bin
+  const topAge = ageBinData.slice().sort((a, b) => b.count - a.count)[0]?.age_bin || "—";
+
+  // Peak weekday+hour (citywide, aggregated)
+  const peakKey = {};
+  heatmapData.forEach(d => {
+    const k = `${d.weekday}__${d.hour}`;
+    peakKey[k] = (peakKey[k] || 0) + Number(d.count || 0);
+  });
+  let peak = {k: null, v: -1};
+  Object.entries(peakKey).forEach(([k, v]) => {
+    if (v > peak.v) peak = {k, v};
+  });
+  const peakTime =
+    peak.k ? `${peak.k.split("__")[0]} @ ${peak.k.split("__")[1]}:00` : "—";
+
+  // KPI area
+  setText("kpi-total", formatNumber(total));
+  setText("kpi-top-area", topArea);
+  setText("kpi-yoy", yoyText);
+
+  // Conclusion findings
+  setText("finding-top-area", topArea);
+  setText("finding-top-crime", topCrime);
+  setText("finding-yoy", yoyText);
+  setText("finding-top-age", topAge);
+  setText("finding-peak-time", peakTime);
 }
 
 function topN(data, fieldName, n) {
@@ -1034,6 +1137,7 @@ Promise.all([
   ageBinData = allData[4].map(d => ({age_bin: d.age_bin, count: Number(d.count)}));
   weaponAgeData = allData[5].map(d => ({age_bin: d.age_bin, weap_desc: d.weap_desc, count: Number(d.count)}));
   mapPointData = allData[6].map(d => ({age_bin: d.age_bin, vict_age: Number(d.vict_age), lat: Number(d.lat), lon: Number(d.lon), weap_desc: d.weap_desc, area_name: d.area_name, crime_type: d.crime_type}));
+  computeAndRenderStoryStats();
   renderAllCharts();
 });
 </script>
