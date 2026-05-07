@@ -280,10 +280,10 @@
   <section class="hero">
     <h1>Crime Patterns in Los Angeles</h1>
     <p>
-      Los Angeles is a large and diverse city, but reported crime is not spread evenly across neighborhoods, time, or incident characteristics. Understanding <strong>where</strong> incidents concentrate and <strong>when</strong> they peak is important for residents, local agencies, and anyone interested in public safety—because interventions are often place- and time-specific.
+      News about crime in Los Angeles often comes in fragments: a story about one neighborhood, one incident, or one dramatic spike in the headlines. It can be hard to tell whether those stories represent the “typical” pattern of crime in the city or just a few extreme cases.
     </p>
     <p>
-      This project uses 2023–2024 reported crime records to tell a clear story with linked dashboards. Dashboard 1 explains how totals differ by LAPD area and how the <em>crime-type mix</em> and <em>time patterns</em> change when you focus on one area and one crime type. Dashboard 2 focuses on <em>victim age ranges</em> and links those age groups to a City of Los Angeles map view and weapon descriptions. The goal is not only to show charts, but to help readers explore patterns and interpret what those patterns might mean.
+      We chose this topic because we wanted to step back from individual headlines and see the broader picture: <strong>where</strong> crime is concentrated across LAPD areas, <strong>when</strong> incidents tend to peak across the week and year, and <strong>who</strong> appears most often in victim records. Using 2023–2024 incident data from the Los Angeles Open Data Portal, our goal is to tell a data-backed story about crime in the city that is easy for a non-technical audience to explore. The visualizations below are designed to help readers move from a citywide overview into specific areas, crime types, and victim age ranges, and then reflect on what those patterns might mean for everyday life and public safety decisions.
     </p>
     <div class="hero-meta">
       <div class="meta-pill"><strong>Group Members:</strong> Xuyi Wu, Li-Yi Hsu</div>
@@ -352,9 +352,7 @@
         <p>This driver plot shows total reported incidents by LAPD area and controls the other charts in Dashboard 1 and the contextual visualizations below.</p>
         <div class="chart-frame tall" id="dashboard1-driver"></div>
         <div class="note">
-          <strong>What this shows:</strong> which LAPD areas contribute the most incidents in 2023–2024.<br>
-          <strong>Why it matters:</strong> place is the core “where” question—hotspots can reflect density, activity centers, and enforcement/reporting differences.<br>
-          <strong>How it connects:</strong> clicking an area updates the crime-type profile and the time-pattern charts, so you can see whether the same “citywide” story holds locally.
+          When you scan this chart, you can immediately see that a small group of LAPD areas account for a large share of reported incidents in 2023–2024, while many other areas sit much lower on the scale. This confirms that crime in Los Angeles is highly concentrated rather than evenly spread across the city. Clicking on one of the taller bars lets you treat that area as your “lens” for the rest of the page—once selected, the dashboards below show what kinds of crimes and time patterns are driving that high total.
         </div>
       </div>
 
@@ -363,9 +361,7 @@
         <p>This bar chart updates after area selection and also acts as a second filter for the timeline and heatmap.</p>
         <div class="chart-frame tall" id="dashboard1-crime-types"></div>
         <div class="note">
-          <strong>What this shows:</strong> the top crime categories for the selected area (ranked by count).<br>
-          <strong>Why it matters:</strong> “high crime” is not one thing—different areas can have different dominant offense types.<br>
-          <strong>How it connects:</strong> clicking a crime type narrows the trend and heatmap to that category so the “when” patterns match the “what” you selected.
+          After you choose an area, this chart reveals what “high crime” actually means there—for example, some areas are dominated by theft and vehicle-related incidents, while others show more violent or assault-related categories. This helps separate volume from composition: two areas with similar totals can have very different safety stories. Clicking on one of the bars goes a step further by telling the rest of Dashboard 1 to focus only on that crime type so you can see when it rises and falls over time.
         </div>
       </div>
     </div>
@@ -376,9 +372,7 @@
         <p>This line chart shows how incident counts change over time for the selected area and, when chosen, the selected crime type.</p>
         <div class="chart-frame wide" id="dashboard1-trend"></div>
         <div class="note">
-          <strong>What this shows:</strong> month-to-month changes from 2023 through 2024 for the current selection.<br>
-          <strong>Why it matters:</strong> it answers “does crime increase or decrease over time?” and highlights seasonality or reporting shifts.<br>
-          <strong>How it connects:</strong> the trend updates based on the area (and optional crime type) so the time story matches the location and category you care about.
+          The trend line answers one of our main questions: does the number of reported incidents rise, fall, or stay fairly flat over these two years? When viewed for the whole city, the line stays relatively stable through 2023 and then begins to drop in 2024, suggesting either a real decline or changes in reporting. When you filter to a specific area and crime type, you can see whether that pattern follows the citywide story or deviates—for instance, some offenses may peak seasonally or show sharper declines than others.
         </div>
       </div>
 
@@ -387,9 +381,7 @@
         <p>This heatmap shows when incidents are most likely to occur based on hour of day and day of week.</p>
         <div class="chart-frame wide" id="dashboard1-heatmap"></div>
         <div class="note">
-          <strong>What this shows:</strong> the “temporal pulse” of incidents across weekdays and hours.<br>
-          <strong>Why it matters:</strong> time-of-week patterns help connect incidents to activity cycles (workdays vs weekends, night vs day).<br>
-          <strong>How it connects:</strong> after you select an area (and optionally a crime type), the heatmap shows when that specific local pattern is most intense.
+          Looking across the grid, darker cells tend to cluster around certain hours and days—for example, late evening periods on weekends are usually more intense than early weekday mornings. This “temporal fingerprint” of crime becomes even more interesting when you filter by area and crime type: some locations show strong nightlife-related peaks, while others have higher activity during weekday business hours. These patterns connect incident counts to everyday rhythms in the city and suggest when extra attention or resources might have the most impact.
         </div>
       </div>
     </div>
@@ -413,9 +405,7 @@
         <p>Click an age range in this treemap to filter the map and weapon bar chart.</p>
         <div class="chart-frame" id="dashboard2-age"></div>
         <div class="note">
-          <strong>What this shows:</strong> which victim age ranges appear most frequently in reports.<br>
-          <strong>Why it matters:</strong> it connects the story to who is affected—age patterns can differ by context and may suggest different prevention needs.<br>
-          <strong>How it connects:</strong> selecting an age range updates the map and weapon chart so “where” and “with what” reflect the selected victim group.
+          The treemap quickly shows which age ranges appear most often among reported victims—for example, young and middle‑aged adults occupy much larger blocks than very young or older age groups. This matters because it shifts the focus from where crimes happen to who is showing up in the records, and it raises questions about exposure, opportunity, and reporting behavior. When you click on one of the age ranges, the rest of Dashboard 2 reorganizes itself around that group so you can see where those incidents cluster on the map and what kinds of weapons are most frequently involved.
         </div>
       </div>
 
@@ -424,9 +414,7 @@
         <p>This map plots sample incident coordinates for the selected age range and shows latitude, longitude, and weapon description in the tooltip.</p>
         <div class="chart-frame tall" id="dashboard2-map"></div>
         <div class="note">
-          <strong>What this shows:</strong> a spatial sample of incidents for the selected age range, overlaid on Los Angeles community plan areas.<br>
-          <strong>Why it matters:</strong> it reveals whether incidents involving different age groups cluster in different parts of the city.<br>
-          <strong>How it connects:</strong> the points shown are filtered by age range, and hover tooltips provide the exact latitude/longitude and weapon description to keep the view interpretable.
+          Once an age range is selected, the red dots on the Los Angeles map highlight where those incidents are actually being reported. Some clusters hug familiar corridors of the city, while others extend into more peripheral areas, suggesting that risk for a given age group is not tied to a single neighborhood. Hovering over a point shows the exact latitude, longitude, and weapon description, turning the map into a bridge between summary statistics and the on‑the‑ground geography of incidents.
         </div>
       </div>
     </div>
@@ -436,9 +424,7 @@
         <p>This chart highlights the most common weapon descriptions associated with the selected victim-age range.</p>
         <div class="chart-frame tall" id="dashboard2-weapons"></div>
         <div class="note">
-          <strong>What this shows:</strong> the top weapon descriptions linked to the selected victim-age range (where reported).<br>
-          <strong>Why it matters:</strong> it adds incident context beyond location/time—different patterns may imply different risk environments.<br>
-          <strong>How it connects:</strong> it updates with the same age selection as the map, so the “what happened” context matches the “where it happened.”
+          This bar chart translates the filtered incidents into a list of the most common weapon descriptions for the chosen age range. In some selections, “No weapon reported” dominates, hinting at incidents like fraud or simple assaults; in others, specific categories such as handguns, knives, or blunt objects rise to the top. Reading this chart together with the age treemap and the map view helps connect who is involved, where events happen, and what kind of risk environment those victims are facing.
         </div>
       </div>
     </div>
@@ -459,13 +445,17 @@
     <div class="chart-grid">
       <div class="chart-card">
         <h3>Contextual View 1: Crime Burden Adjusted by Population</h3>
-        <p>Incidents per 100,000 residents helps compare relative burden instead of only comparing total counts. This contextual chart remains citywide and does not change with dashboard selections.</p>
+        <p>
+          This bar chart shows estimated incidents per 100,000 residents for each LAPD area, rather than raw totals. Areas that already looked high in the main dashboard—such as Central or Pacific—still stand out, but some mid‑volume areas move up or down once population is taken into account. This reminds us that a large number of incidents does not always mean a higher per‑person burden; densely populated or highly visited areas will naturally generate more reports. Looking at the chart this way helps separate “busy places” from places where residents may experience a disproportionately high risk.
+        </p>
         <div class="chart-frame" id="chart5"></div>
       </div>
 
       <div class="chart-card">
         <h3>Contextual View 2: Poverty Rate and Crime Count</h3>
-        <p>This bubble chart places area poverty rate beside reported incidents and uses bubble size to show estimated incidents per 100,000 residents. This contextual chart remains citywide and does not change with dashboard selections.</p>
+        <p>
+          In this scatter plot, each circle represents an LAPD area, with poverty rate on the x‑axis, total incident count on the y‑axis, and bubble size indicating incidents per 100,000 residents. Many areas with higher poverty rates also have higher crime counts and larger bubbles, suggesting that economic hardship and crime burden often overlap. However, there are also notable exceptions—some commercial or entertainment‑heavy areas show high counts despite more moderate poverty levels, likely because they attract large numbers of non‑residents. Together, these patterns support the idea that both social conditions and local land use shape crime patterns in Los Angeles.
+        </p>
         <div class="chart-frame" id="chart6"></div>
       </div>
     </div>
