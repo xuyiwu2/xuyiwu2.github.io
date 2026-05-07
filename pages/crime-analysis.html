@@ -54,6 +54,14 @@
       line-height: 1.15;
     }
 
+    .hero-intro-label {
+      margin: 6px 0 14px;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
     .hero p {
       margin: 0 0 10px;
       max-width: 820px;
@@ -236,6 +244,16 @@
       font-size: 0.96rem;
     }
 
+    .howto {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #ffffff;
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
     .writeup {
       display: grid;
       gap: 14px;
@@ -279,6 +297,7 @@
 <div class="page-shell">
   <section class="hero">
     <h1>Crime Patterns in Los Angeles</h1>
+    <div class="hero-intro-label">Introduction</div>
     <p>
       News about crime in Los Angeles often comes in fragments: a story about one neighborhood, one incident, or one dramatic spike in the headlines. It can be hard to tell whether those stories represent the “typical” pattern of crime in the city or just a few extreme cases.
     </p>
@@ -351,6 +370,7 @@
         <h3>Main View: Crime Incidents by LAPD Area</h3>
         <p>This driver plot shows total reported incidents by LAPD area and controls the other charts in Dashboard 1 and the contextual visualizations below.</p>
         <div class="chart-frame tall" id="dashboard1-driver"></div>
+        <div class="howto">Click any station in the bar chart to filter the other two charts. Click again to deselect.</div>
         <div class="note">
           When you scan this chart, you can immediately see that a small group of LAPD areas account for a large share of reported incidents in 2023–2024, while many other areas sit much lower on the scale. This confirms that crime in Los Angeles is highly concentrated rather than evenly spread across the city. Clicking on one of the taller bars lets you treat that area as your “lens” for the rest of the page—once selected, the dashboards below show what kinds of crimes and time patterns are driving that high total.
         </div>
@@ -360,6 +380,7 @@
         <h3>Driven Plot: Top Crime Types in Selected Area</h3>
         <p>This bar chart updates after area selection and also acts as a second filter for the timeline and heatmap.</p>
         <div class="chart-frame tall" id="dashboard1-crime-types"></div>
+        <div class="howto">Click any station in the bar chart to filter the other two charts. Click again to deselect.</div>
         <div class="note">
           After you choose an area, this chart reveals what “high crime” actually means there—for example, some areas are dominated by theft and vehicle-related incidents, while others show more violent or assault-related categories. This helps separate volume from composition: two areas with similar totals can have very different safety stories. Clicking on one of the bars goes a step further by telling the rest of Dashboard 1 to focus only on that crime type so you can see when it rises and falls over time.
         </div>
@@ -404,6 +425,7 @@
         <h3>Main View: Victim Age Range Distribution</h3>
         <p>Click an age range in this treemap to filter the map and weapon bar chart.</p>
         <div class="chart-frame" id="dashboard2-age"></div>
+        <div class="howto">Click any station in the bar chart to filter the other two charts. Click again to deselect.</div>
         <div class="note">
           The treemap quickly shows which age ranges appear most often among reported victims—for example, young and middle‑aged adults occupy much larger blocks than very young or older age groups. This matters because it shifts the focus from where crimes happen to who is showing up in the records, and it raises questions about exposure, opportunity, and reporting behavior. When you click on one of the age ranges, the rest of Dashboard 2 reorganizes itself around that group so you can see where those incidents cluster on the map and what kinds of weapons are most frequently involved.
         </div>
@@ -440,7 +462,7 @@
   <section>
     <h2 class="section-title">Contextual Visualization</h2>
     <p class="section-lead">
-      These two supporting charts provide context beyond raw crime totals, which is one of the key rubric requirements.
+      These two supporting charts provide context beyond raw crime totals.
     </p>
     <div class="chart-grid">
       <div class="chart-card">
@@ -472,28 +494,28 @@
     <h2 class="section-title">Conclusion</h2>
     <div class="writeup">
       <div class="panel">
-        <p><strong>Key findings (from the dashboards):</strong></p>
+        <p>Key findings (from the dashboards):</p>
         <ul style="margin: 10px 0 0 18px; color: var(--text);">
           <li>
-            The highest incident volume comes from <strong id="finding-top-area">—</strong>, showing that reported crime is geographically concentrated rather than evenly distributed citywide.
+            The highest incident volume comes from <span id="finding-top-area">—</span>, showing that reported crime is geographically concentrated rather than evenly distributed citywide.
           </li>
           <li>
-            The most common crime type overall is <strong id="finding-top-crime">—</strong>, suggesting that a small number of categories account for a large share of reports.
+            The most common crime type overall is <span id="finding-top-crime">—</span>, suggesting that a small number of categories account for a large share of reports.
           </li>
           <li>
-            From 2023 to 2024, total reported incidents changed by <strong id="finding-yoy">—</strong>. This helps answer whether reports are trending upward or downward over the two-year window.
+            From 2023 to 2024, total reported incidents changed by <span id="finding-yoy">—</span>. This helps answer whether reports are trending upward or downward over the two-year window.
           </li>
           <li>
-            The largest victim-age range by report count is <strong id="finding-top-age">—</strong>, indicating which demographic group appears most frequently in victim records.
+            The largest victim-age range by report count is <span id="finding-top-age">—</span>, indicating which demographic group appears most frequently in victim records.
           </li>
           <li>
-            The strongest citywide time concentration occurs around <strong id="finding-peak-time">—</strong>, highlighting a consistent weekly/hourly peak pattern that can guide awareness and resource planning.
+            The strongest citywide time concentration occurs around <span id="finding-peak-time">—</span>, highlighting a consistent weekly/hourly peak pattern that can guide awareness and resource planning.
           </li>
         </ul>
       </div>
       <div class="panel">
         <p>
-          Overall, the dashboards show that reported crime in Los Angeles (2023–2024) is shaped by <strong>where</strong> incidents occur, <strong>what</strong> types dominate in different areas, <strong>when</strong> peaks happen across months and weekly/hourly cycles, and <strong>who</strong> appears in victim records by age range. The contextual charts provide extra perspective beyond raw totals (for example, comparing counts against population-based burden). These findings should be interpreted carefully: the dataset reflects reported incidents (not all incidents), category labels may vary by reporting practice, and later 2024 data may be less complete. Even with these limitations, the project provides a clearer public-facing story of how location, category, time, and victim age come together in Los Angeles crime reports.
+          To conclude, this project shows that crime patterns in Los Angeles during 2023–2024 are not uniform across the city. A small number of areas account for a large share of incidents, and the crime-type mix changes once you zoom into a specific location. Over time, the monthly trend suggests a noticeable shift between 2023 and 2024, while the heatmap highlights recurring weekly and hourly peaks that reflect the city’s routines and activity cycles. When we look at victim age ranges, the distribution is not evenly spread across ages, and the map and weapon summaries show that different age groups can experience different spatial clustering and incident contexts. At the same time, the contextual views remind us that raw counts should be interpreted alongside population burden and neighborhood conditions. While the data reflects reported incidents and may be influenced by reporting practices, the combined dashboards provide a clearer, more grounded picture of where, when, and how crime is showing up across Los Angeles.
         </p>
       </div>
     </div>
